@@ -77,6 +77,7 @@ int main()
 
     // model
     Model kuca(FileSystem::getPath("resources/objects/kuca/cottage.obj"));
+    Model packman(FileSystem::getPath("resources/objects/Pac-Man/Pac-Man.obj"));
 
     float skyboxVertices[] = {
             // positions
@@ -173,11 +174,19 @@ int main()
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
 
+        // pack-man
+        model= glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(5.0f, -1.0f, 5.0f));
+        model = glm::scale(model, glm::vec3(0.009f));
+        shader.setMat4("model", model);
+        packman.Draw(shader);
+
         // kuca
         model= glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(1.0f, -1.0f, 1.0f));
-        model = glm::scale(model, glm::vec3(0.3f, 0.4f, 0.3));
+        model = glm::scale(model, glm::vec3(0.5f, 0.6f, 0.6));
         shader.setMat4("model", model);
+        shader.setMat4("projection", projection);
         kuca.Draw(shader);
 
         // draw skybox
@@ -209,9 +218,18 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
+
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -242,6 +260,8 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
+
+
 }
 
 
