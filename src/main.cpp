@@ -18,6 +18,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 unsigned int loadCubemap(vector<std::string> faces);
+unsigned int loadTexture(char const * path);
 
 
 // ekran
@@ -74,7 +75,7 @@ int main()
     // build and compile shaders
 
     Shader shader("resources/shaders/vertexShader.vs", "resources/shaders/fragmentShader.fs");
-   // Shader shader("10.2.instancing.vs", "10.2.instancing.fs");
+    Shader shaderB("resources/shaders/3.1.blending.vs", "resources/shaders/3.1.blending.fs");
     Shader skyboxx("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
 
     // model
@@ -86,7 +87,7 @@ int main()
     Model woodTable(FileSystem::getPath("resources/objects/Wood Table with glasplatte/Wood_Table.obj"));
     Model bed(FileSystem::getPath("resources/objects/bed/bed.obj"));
     Model plants(FileSystem::getPath("resources/objects/3dexport_hourglass_planter_obj_1676848285/Hourglass Planter.obj"));
-    Model slight(FileSystem::getPath("resources/objects/light/StreetLight 3 OBJ.obj"));
+
 
     float skyboxVertices[] = {
             // positions
@@ -132,6 +133,85 @@ int main()
             -1.0f, -1.0f,  1.0f,
             1.0f, -1.0f,  1.0f
     };
+    float transparentVertices[] = {
+            // positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+            0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+            0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+            1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+            0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+            1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+            1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+    };
+    float cubeVertices[] = {
+            // positions          // texture Coords
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+
+    // cube VAO
+    unsigned int cubeVAO, cubeVBO;
+    glGenVertexArrays(1, &cubeVAO);
+    glGenBuffers(1, &cubeVBO);
+    glBindVertexArray(cubeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    // transparent VAO
+    unsigned int transparentVAO, transparentVBO;
+    glGenVertexArrays(1, &transparentVAO);
+    glGenBuffers(1, &transparentVBO);
+    glBindVertexArray(transparentVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glBindVertexArray(0);
 
     // skybox VAO
     unsigned int skyboxVAO, skyboxVBO;
@@ -143,7 +223,7 @@ int main()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-    // tekstura
+    // teksture
     vector<std::string> faces
             {
                     FileSystem::getPath("resources/textures/nightsky/nightsky_ft.tga"),
@@ -154,6 +234,18 @@ int main()
                     FileSystem::getPath("resources/textures/nightsky/nightsky_lf.tga")
             };
     unsigned int cubemapTexture = loadCubemap(faces);
+    unsigned int cubeTexture = loadTexture(FileSystem::getPath("resources/textures/brick-subsea.jpg").c_str());
+    unsigned int transparentTexture = loadTexture(FileSystem::getPath("resources/textures/grass.png").c_str());
+
+    // transparent vegetation locations
+    vector<glm::vec3> vegetation
+            {
+                    glm::vec3(-6.5f, -1.0f, -5.48f),
+                    glm::vec3( -3.5f, -1.0f, -4.49f),
+                    glm::vec3( -5.0f, -1.0f, -4.3f),
+                    // glm::vec3(-0.3f, 0.0f, -2.3f),
+                    glm::vec3 (-4.5f, -1.0f, -5.6f)
+            };
 
     //pozicije drveca
     srand(9);
@@ -169,6 +261,9 @@ int main()
 
     shader.use();
     shader.setInt("texture1", 0);
+
+    shaderB.use();
+    shaderB.setInt("texture1", 0);
 
 
     // petlja renderovanja
@@ -191,6 +286,8 @@ int main()
         shader.setMat4("model", model);
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
+
+
 
         // pack-man
         model= glm::mat4(1.0f);
@@ -227,7 +324,7 @@ int main()
         shader.setMat4("model", model);
         kuca.Draw(shader);
 
-        //draw planter
+        //saksije ispred kuce
         model= glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(2.7f, -0.8f, 2.50f));
         model = glm::scale(model, glm::vec3(0.7f));
@@ -245,7 +342,7 @@ int main()
 
         // drvo?
         model= glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-4.0f, -1.0f, -4.0f));
+        model = glm::translate(model, glm::vec3(-5.0f, -1.3f, -5.0f));
         model = glm::scale(model, glm::vec3(0.2f));
         shader.setMat4("model", model);
         woodel.Draw(shader);
@@ -256,6 +353,34 @@ int main()
         model = glm::scale(model, glm::vec3(0.9f));
         shader.setMat4("model", model);
         woodTable.Draw(shader);
+
+        // cubes
+        shaderB.use();
+        shaderB.setMat4("view", view);
+        shaderB.setMat4("projection", projection);
+        glBindVertexArray(cubeVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, cubeTexture);
+        model=glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-6.0f, -1.0f, -6.0f));
+        shaderB.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-3.0f, -1.0f, -5.0f));
+        shaderB.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+        glBindVertexArray(transparentVAO);
+        glBindTexture(GL_TEXTURE_2D, transparentTexture);
+        for (unsigned int i = 0; i < vegetation.size(); i++)
+        {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, vegetation[i]);
+            shaderB.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+
 
         // draw skybox
         glDepthFunc(GL_LEQUAL);
@@ -276,6 +401,9 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    glDeleteVertexArrays(1, &cubeVAO);
+    glDeleteBuffers(1, &cubeVBO);
 
     glfwTerminate();
     return 0;
@@ -329,8 +457,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 
-
 }
+
 
 
 unsigned int loadTexture(char const * path)
@@ -354,8 +482,8 @@ unsigned int loadTexture(char const * path)
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT); // for this tutorial: use GL_CLAMP_TO_EDGE to prevent semi-transparent borders. Due to interpolation it takes texels from next repeat
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
