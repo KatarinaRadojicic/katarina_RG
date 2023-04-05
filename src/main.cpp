@@ -85,6 +85,8 @@ int main()
     Model tree(FileSystem::getPath("resources/objects/78-tree/Tree/3d files/tree.obj"));
     Model woodTable(FileSystem::getPath("resources/objects/Wood Table with glasplatte/Wood_Table.obj"));
     Model bed(FileSystem::getPath("resources/objects/bed/bed.obj"));
+    Model plants(FileSystem::getPath("resources/objects/3dexport_hourglass_planter_obj_1676848285/Hourglass Planter.obj"));
+    Model slight(FileSystem::getPath("resources/objects/light/StreetLight 3 OBJ.obj"));
 
     float skyboxVertices[] = {
             // positions
@@ -130,6 +132,7 @@ int main()
             -1.0f, -1.0f,  1.0f,
             1.0f, -1.0f,  1.0f
     };
+
     // skybox VAO
     unsigned int skyboxVAO, skyboxVBO;
     glGenVertexArrays(1, &skyboxVAO);
@@ -197,8 +200,6 @@ int main()
         packman.Draw(shader);
 
         // kuca
-       // projection=glm::ortho(3.0f, 0.0f, 0.0f, 54.0f, -1.0f, 1.0f);
-       // view=glm::translate(glm::mat4(1.0f), glm::vec3(10, 0, 10));
         model= glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(1.0f, -1.0f, 1.0f));
         model = glm::scale(model, glm::vec3(0.5f, 0.6f, 0.6));
@@ -207,7 +208,7 @@ int main()
 
         //draw piano
         model= glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.2f, -1.0f, 0.3f));
+        model = glm::translate(model, glm::vec3(0.2f, -0.9f, 0.3f));
         model = glm::scale(model, glm::vec3(0.4f));
         shader.setMat4("model", model);
         piano.Draw(shader);
@@ -226,6 +227,12 @@ int main()
         shader.setMat4("model", model);
         kuca.Draw(shader);
 
+        //draw planter
+        model= glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(2.7f, -0.8f, 2.50f));
+        model = glm::scale(model, glm::vec3(0.7f));
+        shader.setMat4("model", model);
+        plants.Draw(shader);
 
         //renderovanje drveca
         for (int i = 0; i < NR_TREES; i++) {
@@ -235,6 +242,7 @@ int main()
             shader.setMat4("model", model);
             tree.Draw(shader);
         }
+
         // drvo?
         model= glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-4.0f, -1.0f, -4.0f));
@@ -248,7 +256,6 @@ int main()
         model = glm::scale(model, glm::vec3(0.9f));
         shader.setMat4("model", model);
         woodTable.Draw(shader);
-
 
         // draw skybox
         glDepthFunc(GL_LEQUAL);

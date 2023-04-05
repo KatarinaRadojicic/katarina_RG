@@ -1,0 +1,28 @@
+# Blender MTL File: 'Hourglass Planter.blend'
+# Material Count: 2
+
+newmtl Material.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.010080 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump w4kHourglass Planter_Material.001_Normal.png
+map_Kd w4kHourglass Planter_Material.001_BaseColor.png
+map_Ns w4kHourglass Planter_Material.001_Roughness.png
+
+newmtl Material.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.010080 0.800000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump b4kHourglass Planter_Material.001_Normal.png
+map_Kd b4kHourglass Planter_Material.001_BaseColor.png
+map_Ns b4kHourglass Planter_Material.001_Roughness.png
