@@ -4,7 +4,6 @@ Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd House-diff.png
-bump House-UV-Normals.png -bm 1
 Ni 1.00
 Ks 0.00 0.00 0.00
 map_Ks House-UV-specular.png
@@ -14,7 +13,6 @@ Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd tramy-UVout.png
-bump tramy-UVnormalst.png -bm 1
 Ni 1.00
 Ks 0.00 0.00 0.00
 map_Ks tramy-UVspercular.png

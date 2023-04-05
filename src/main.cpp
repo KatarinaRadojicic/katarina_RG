@@ -46,7 +46,7 @@ int main()
 #endif
 
     // kreiranje prozora
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "PAC-MAN", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -72,12 +72,19 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     // build and compile shaders
+
     Shader shader("resources/shaders/vertexShader.vs", "resources/shaders/fragmentShader.fs");
+   // Shader shader("10.2.instancing.vs", "10.2.instancing.fs");
     Shader skyboxx("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
 
     // model
     Model kuca(FileSystem::getPath("resources/objects/kuca/cottage.obj"));
     Model packman(FileSystem::getPath("resources/objects/Pac-Man/Pac-Man.obj"));
+    Model piano(FileSystem::getPath("resources/objects/Piano/Piano.obj"));
+    Model woodel(FileSystem::getPath("resources/objects/wood/Wood.obj"));
+    Model tree(FileSystem::getPath("resources/objects/78-tree/Tree/3d files/tree.obj"));
+    Model woodTable(FileSystem::getPath("resources/objects/Wood Table with glasplatte/Wood_Table.obj"));
+    Model bed(FileSystem::getPath("resources/objects/bed/bed.obj"));
 
     float skyboxVertices[] = {
             // positions
@@ -144,6 +151,14 @@ int main()
                     FileSystem::getPath("resources/textures/nightsky/nightsky_lf.tga")
             };
     unsigned int cubemapTexture = loadCubemap(faces);
+
+    //pozicije drveca
+    srand(9);
+    const unsigned int NR_TREES = 100;
+    std::vector<glm::vec3> treePos;
+    for(int i = 0; i < NR_TREES; i++)
+        treePos.push_back(glm::vec3(rand() % 250 - 199, -1.0f, rand() % 200 - 200));
+
     // shader configuration
     skyboxx.use();
     skyboxx.setInt("skybox", 0);
@@ -176,18 +191,64 @@ int main()
 
         // pack-man
         model= glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(5.0f, -1.0f, 5.0f));
+        model = glm::translate(model, glm::vec3(7.0f, -1.0f, 7.0f));
         model = glm::scale(model, glm::vec3(0.009f));
         shader.setMat4("model", model);
         packman.Draw(shader);
 
         // kuca
+       // projection=glm::ortho(3.0f, 0.0f, 0.0f, 54.0f, -1.0f, 1.0f);
+       // view=glm::translate(glm::mat4(1.0f), glm::vec3(10, 0, 10));
         model= glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(1.0f, -1.0f, 1.0f));
         model = glm::scale(model, glm::vec3(0.5f, 0.6f, 0.6));
         shader.setMat4("model", model);
-        shader.setMat4("projection", projection);
         kuca.Draw(shader);
+
+        //draw piano
+        model= glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.2f, -1.0f, 0.3f));
+        model = glm::scale(model, glm::vec3(0.4f));
+        shader.setMat4("model", model);
+        piano.Draw(shader);
+
+        //bed
+        model= glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.3f, -1.0f, 1.9f));
+        model = glm::scale(model, glm::vec3(0.06f));
+        shader.setMat4("model", model);
+        bed.Draw(shader);
+
+        //renderovanje druge kuce
+        model= glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-10.0f, -1.0f, -10.0f));
+        model = glm::scale(model, glm::vec3(0.7f));
+        shader.setMat4("model", model);
+        kuca.Draw(shader);
+
+
+        //renderovanje drveca
+        for (int i = 0; i < NR_TREES; i++) {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, treePos[i]);
+            model = glm::scale(model, glm::vec3(0.8f));
+            shader.setMat4("model", model);
+            tree.Draw(shader);
+        }
+        // drvo?
+        model= glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-4.0f, -1.0f, -4.0f));
+        model = glm::scale(model, glm::vec3(0.2f));
+        shader.setMat4("model", model);
+        woodel.Draw(shader);
+
+        //draw table
+        model= glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.9f, -1.0f, -0.3f));
+        model = glm::scale(model, glm::vec3(0.9f));
+        shader.setMat4("model", model);
+        woodTable.Draw(shader);
+
 
         // draw skybox
         glDepthFunc(GL_LEQUAL);
