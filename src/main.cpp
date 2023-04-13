@@ -183,6 +183,8 @@ int main()
     bed.SetShaderTextureNamePrefix("material.");
     Model plants(FileSystem::getPath("resources/objects/3dexport_hourglass_planter_obj_1676848285/Hourglass Planter.obj"));
     plants.SetShaderTextureNamePrefix("material.");
+    Model pool(FileSystem::getPath("resources/objects/pool/avika-curved_pool_ver1/avika-curved_pool_ver1.obj"));
+    pool.SetShaderTextureNamePrefix("material.");
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -190,50 +192,59 @@ int main()
     pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
     pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
 
-    pointLight.constant = 1.0f;
-    pointLight.linear = 0.09f;
-    pointLight.quadratic = 0.032f;
+    pointLight.constant = 0.1f;
+    pointLight.linear = 1.0f;
+    pointLight.quadratic = 1.0f;
+    // PointLight& pointLight = programState->pointLight;
+    // pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
+    // pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
+    // pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
+    // pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
+
+    // pointLight.constant = 1.0f;
+    // pointLight.linear = 0.09f;
+    // pointLight.quadratic = 0.032f;
 
     //model matrica iz learnopengl-a
-    unsigned int amount = 100;
-    glm::mat4* modelMatrices;
-    modelMatrices = new glm::mat4[amount];
-    srand(static_cast<unsigned int>(glfwGetTime())); // initialize random seed
-    float radius = 50.0;
-    float offset = 2.5f;
-    for (unsigned int i = 0; i < amount; i++)
-    {
-        glm::mat4 model = glm::mat4(1.0f);
-        // 1. translation: displace along circle with 'radius' in range [-offset, offset]
-        float angle = (float)i / (float)amount * 360.0f;
-        float displacement = (rand() % (int)(2 * offset * 100)) / 150.0f - offset;
-        float x = sin(angle) * radius + displacement;
-        displacement = (rand() % (int)(2 * offset * 100)) / 80.0f - offset;
-        float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
-        displacement = (rand() % (int)(2 * offset * 100)) / 150.0f - offset;
-        float z = cos(angle) * radius + displacement;
-        model = glm::translate(model, glm::vec3(x-10, y+5, z-10));
+    // glm::mat4* modelMatrices;
+    // modelMatrices = new glm::mat4[amount];
+    // srand(static_cast<unsigned int>(glfwGetTime())); // initialize random seed
+    // float radius = 50.0;
+    // float offset = 2.5f;
+    // for (unsigned int i = 0; i < amount; i++)
+    // {
+    //     glm::mat4 model = glm::mat4(1.0f);
+    //     // 1. translation: displace along circle with 'radius' in range [-offset, offset]
+    //     float angle = (float)i / (float)amount * 360.0f;
+    //     float displacement = (rand() % (int)(2 * offset * 100)) / 150.0f - offset;
+    //     float x = sin(angle) * radius + displacement;
+    //     displacement = (rand() % (int)(2 * offset * 100)) / 150.0f - offset;
+    //     float z = cos(angle) * radius + displacement;
+    //     model = glm::translate(model, glm::vec3(x-25, 5, z-25));
 
-        // 2. scale: Scale between 0.05 and 0.25f
-        float scale = static_cast<float>((rand() % 20) / 100.0 + 0.05);
-        model = glm::scale(model, glm::vec3(scale));
+    //     // 2. scale: Scale between 0.05 and 0.25f
+    //     float scale = static_cast<float>((rand() % 20) / 100.0 + 0.05);
+    //     model = glm::scale(model, glm::vec3(scale));
 
-        // 3. rotation: add random rotation around a (semi)randomly picked rotation axis vector
-        float rotAngle = static_cast<float>((rand() % 360));
-        model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+    //     // 3. rotation: add random rotation around a (semi)randomly picked rotation axis vector
+    //     float rotAngle = static_cast<float>((rand() % 360));
+    //     model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
 
-        // 4. now add to list of matrices
-        modelMatrices[i] = model;
-    }
+    //     // 4. now add to list of matrices
+    //     modelMatrices[i] = model;
+    // }
 
     
     std::vector<glm::vec3> lightColors;
-    srand(13);
-    for (unsigned int i = 0; i < amount; i++)
-    {
-       
-        float rColor = ((rand() % 100) / 200.0f) + 0.3; // between 0.1 and 0.8
-        float gColor = ((rand() % 100) / 200.0f) + 0.3; // between 0.1 and 0.8
+    std::vector<glm::vec3> lightPositions;
+    unsigned int brSv=6;
+    float x=6, y=0, z=8;
+    float offset=0.6f;
+    for (unsigned int i = 0; i < brSv; i++)
+    { 
+        lightPositions.push_back(glm::vec3(x+offset, y, z+offset/2));
+        float rColor = ((rand() % 100) / 200.0f); // between 0.1 and 0.5
+        float gColor = ((rand() % 100) / 200.0f) + 0.2; // between 0.1 and 0.7
         float bColor = ((rand() % 100) / 200.0f) + 0.1; // between 0.1 and 0.6
         lightColors.push_back(glm::vec3(rColor, gColor, bColor));
     }
@@ -407,17 +418,11 @@ int main()
     std::vector<glm::vec3> treePos;
     for(int i = 0; i < NR_TREES; i++)
         treePos.push_back(glm::vec3(rand() % 250 - 199, -1.0f, rand() % 200 - 200));
-
-   
-  
-
     
     skyboxx.use();
     skyboxx.setInt("skybox", 0);
 
-    shader.use();
-    shader.setInt("texture1", 0);
-
+  
     shaderB.use();
     shaderB.setInt("texture1", 0);
 
@@ -444,16 +449,55 @@ int main()
 
         // don't forget to enable shader before setting uniforms
         shader.use();
-        pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
-        shader.setVec3("pointLight.position", pointLight.position);
-        shader.setVec3("pointLight.ambient", pointLight.ambient);
-        shader.setVec3("pointLight.diffuse", pointLight.diffuse);
-        shader.setVec3("pointLight.specular", pointLight.specular);
-        shader.setFloat("pointLight.constant", pointLight.constant);
-        shader.setFloat("pointLight.linear", pointLight.linear);
-        shader.setFloat("pointLight.quadratic", pointLight.quadratic);
+         // directional light
+        shader.setVec3("dirLight.direction", -0.2f, 0.7f, 0.3f);
+        shader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        shader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+        shader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+        
+        //pointlights
+        shader.setVec3("pointLights[0].position",glm::vec3(1.0f, 2.0f, 1.2f));
+        shader.setVec3("pointLights[0].ambient", pointLight.ambient);
+        shader.setVec3("pointLights[0].diffuse", pointLight.diffuse);
+        shader.setVec3("pointLights[0].specular", pointLight.specular);
+        shader.setFloat("pointLights[0].constant", pointLight.constant);
+        shader.setFloat("pointLights[0].linear", pointLight.linear);
+        shader.setFloat("pointLights[0].quadratic", pointLight.quadratic);
+
+        // shader.setVec3("pointLights[1].position", glm::vec3(6.7f+cos(currentFrame*2)*0.6f,1.15f+cos(currentFrame)*0.2f+cos(currentFrame)*0.4f,-17.45f+sin(currentFrame)*0.6f));
+        // shader.setVec3("pointLights[1].ambient", pointLight.ambient);
+        // shader.setVec3("pointLights[1].diffuse", pointLight.diffuse);
+        // shader.setVec3("pointLights[1].specular", pointLight.specular);
+        // shader.setFloat("pointLights[1].constant", pointLight.constant);
+        // shader.setFloat("pointLights[1].linear", pointLight.linear);
+        // shader.setFloat("pointLights[1].quadratic", pointLight.quadratic);
+    
+        
+        // pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
+        // shader.setVec3("pointLights[2].position", pointLight.position);
+        // shader.setVec3("pointLights[2].ambient", pointLight.ambient);
+        // shader.setVec3("pointLights[2].diffuse", pointLight.diffuse);
+        // shader.setVec3("pointLight[2].specular", pointLight.specular);
+        // shader.setFloat("pointLights[2].constant", pointLight.constant);
+        // shader.setFloat("pointLights[2].linear", pointLight.linear);
+        // shader.setFloat("pointLights[2].quadratic", pointLight.quadratic);
         shader.setVec3("viewPosition", programState->camera.Position);
         shader.setFloat("material.shininess", 32.0f);
+
+          // spotLight
+          for(int i=0;i<brSv;i++){
+        shader.setVec3("spotLights[i].position", lightPositions[i]);
+        shader.setVec3("spotLights[i].direction",  glm::vec3(1.0f, 0.0f, -1.0f));
+        shader.setVec3("spotLights[i].ambient", 1.0f, 0.0f, 0.0f);
+        shader.setVec3("spotLights[i].diffuse", 1.0f, 1.0f, 1.0f);
+        shader.setVec3("spotLights[i].specular", 1.0f, 1.0f, 1.0f);
+        shader.setFloat("spotLights[i].constant", 1.0f);
+        shader.setFloat("spotLights[i].linear", 0.1f);
+        shader.setFloat("spotLights[i].quadratic", 0.032f);
+        shader.setFloat("spotLights[i].cutOff", glm::cos(glm::radians(15.5f)));
+        shader.setFloat("spotLights[i].outerCutOff", glm::cos(glm::radians(17.0f)));  
+        }
+
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
                                                 (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
@@ -476,7 +520,7 @@ int main()
         model = glm::scale(model, glm::vec3(0.5f, 0.6f, 0.6));
         shader.setMat4("model", model);
         kuca.Draw(shader);
-
+         glEnable(GL_CULL_FACE);
         //draw piano
         model= glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.2f, -0.9f, 0.3f));
@@ -491,12 +535,12 @@ int main()
         shader.setMat4("model", model);
         bed.Draw(shader);
 
-        //renderovanje druge kuce
+        //renderovanje bazena
         model= glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-10.0f, -1.0f, -10.0f));
-        model = glm::scale(model, glm::vec3(0.7f));
+        model = glm::translate(model, glm::vec3(8.0f, -1.0f, 6.0f));
+        model = glm::scale(model, glm::vec3(0.3f));
         shader.setMat4("model", model);
-        kuca.Draw(shader);
+        pool.Draw(shader);
 
         //saksije ispred kuce
         model= glm::mat4(1.0f);
@@ -505,6 +549,7 @@ int main()
         shader.setMat4("model", model);
         plants.Draw(shader);
 
+       
         //renderovanje drveca
         for (int i = 0; i < NR_TREES; i++) {
             model = glm::mat4(1.0f);
@@ -513,6 +558,7 @@ int main()
             shader.setMat4("model", model);
             tree.Draw(shader);
         }
+
 
         // drvo?
         model= glm::mat4(1.0f);
@@ -528,6 +574,7 @@ int main()
         shader.setMat4("model", model);
         woodTable.Draw(shader);
 
+         glDisable(GL_CULL_FACE);
         // cubes
         shaderB.use();
         shaderB.setVec3("view",  programState->camera.Position);
@@ -559,11 +606,21 @@ int main()
         shaderLightBox.use();
         shaderLightBox.setMat4("projection", projection);
         shaderLightBox.setMat4("view", view);
-        for (unsigned int i = 0; i <amount; i++) {
-            shaderLightBox.setMat4("model", modelMatrices[i]);
+        for (unsigned int i = 0; i <brSv; i++) {
+            model=glm::mat4(1.0f);
+            model=glm::translate(model, lightPositions[i]);
+            model=glm::scale(model, glm::vec3(0.1));
+            shaderLightBox.setMat4("model", model);
             shaderLightBox.setVec3("lightColor", sin((float) glfwGetTime() * lightColors[i]) / 2.0f + 0.5f);
             renderCube();
         }
+       // point light kocka
+        // model = glm::mat4(1.0f);
+        // model = glm::translate(model, glm::vec3(-7.0f, -1.0f, -6.0f));
+        // model = glm::scale(model, glm::vec3(0.5f));
+        // shaderLightBox.setMat4("model", model);
+        // shaderLightBox.setVec3("lightColor", glm::vec3(255.0f, 255.0f, 255.0f));
+        // renderCube();
 
 
         // draw skybox
