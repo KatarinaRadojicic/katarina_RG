@@ -1,22 +1,7 @@
 #version 330 core
 layout (location = 0) out vec4 FragColor;
-layout (location = 1) out float brightness;
 
 
-struct SpotLight {
-    vec3 position;
-    vec3 direction;
-    float cutOff;
-    float outerCutOff;
-  
-    float constant;
-    float linear;
-    float quadratic;
-  
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;       
-};
 
 struct PointLight {
     vec3 position;
@@ -45,7 +30,6 @@ struct Material {
 };
 
 #define NR_POINT_LIGHTS 2
-#define NR_SPOT_LIGHTS 1
 
 in vec2 TexCoords;
 in vec3 Normal;
@@ -53,7 +37,6 @@ in vec3 FragPos;
 
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform DirLight dirLight;
-uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 uniform Material material;
 
 uniform vec3 viewPosition;
@@ -104,8 +87,6 @@ void main()
     for(int i = 0; i < NR_POINT_LIGHTS; i++){
         result += CalcPointLight(pointLights[i], normal, FragPos, viewDir); 
     }
-
-   float brightness = dot(result, vec3(0.2126, 0.7152, 0.0722));
 
     FragColor =vec4(result, 1.0);
 
