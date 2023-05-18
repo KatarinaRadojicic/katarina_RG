@@ -19,7 +19,7 @@ Koriscen je skelet projekta i materijali sa [learnopengl] (https://learnopengl.c
 7. `N`->Bloom on/off
 8. `U`->HDR on/off
 9. `J/L`-Adjusting exposure for HDR 
-10. Snimak: 'https://youtu.be/Tjp83JD8nQM
+10. Snimak: 'https://youtu.be/Tjp83JD8nQM'
 
 
 ##Sadrzaj
@@ -27,8 +27,8 @@ U projektu su implemtirane obavezne oblasti (Blending - discard, Face culling, A
 
 Iz grupe `A`:
 - Instancing 
-- Skybox
-Iz grupe `B`:
+- Skybox <br>
+Iz grupe `B`: 
 - HDR i bloom
 
 ## Opis
