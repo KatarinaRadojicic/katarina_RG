@@ -18,7 +18,9 @@ Koriscen je skelet projekta i materijali sa [learnopengl] (https://learnopengl.c
 6. `WASD`->kretanje uz pomoc mise i tastature
 7. `N`->Bloom on/off
 8. `U`->HDR on/off
-9. `J/L`-Adjusting exposure for HDR
+9. `J/L`-Adjusting exposure for HDR 
+10. Snimak: 'https://youtu.be/Tjp83JD8nQM
+
 
 ##Sadrzaj
 U projektu su implemtirane obavezne oblasti (Blending - discard, Face culling, Advanced lighting).<br>
