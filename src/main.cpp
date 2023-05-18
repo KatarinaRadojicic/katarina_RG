@@ -153,7 +153,7 @@ int main() {
 
 
 
-          // // model
+// model
     Model kuca(FileSystem::getPath("resources/objects/kuca/cottage.obj"));
     kuca.SetShaderTextureNamePrefix("material.");
     Model packman(FileSystem::getPath("resources/objects/Pac-Man/Pac-Man.obj"));
@@ -288,16 +288,7 @@ int main() {
             -1.0f, -1.0f,  1.0f,
             1.0f, -1.0f,  1.0f
     };
-    // float transparentVertices[] = {
-    //         // positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
-    //         0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
-    //         0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
-    //         1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
 
-    //         0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
-    //         1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
-    //         1.0f,  0.5f,  0.0f,  1.0f,  0.0f
-    // };
     float cubeVertices[] = {
             // positions          // texture Coords
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -371,20 +362,10 @@ int main() {
     skyboxShader.use();
     skyboxShader.setInt("skybox", 0);
    
-    unsigned int cubeTexture = loadTexture(FileSystem::getPath("resources/textures/brick-subsea.jpg").c_str());
-    unsigned int transparentTexture = loadTexture(FileSystem::getPath("resources/textures/grass.png").c_str());
-
-    // // transparent vegetation locations
-    vector<glm::vec3> vegetation
-            {
-                    glm::vec3(11.5f, -1.0f, 12.52f),
-                    glm::vec3( 14.5f, -1.0f, 11.50f),
-                    glm::vec3( 11.0f, -1.0f, 11.7f),
-                    glm::vec3 (12.5f, -1.0f, 10.4f)
-            };
 
 
-    // //pozicije drveca
+
+     //pozicije drveca
     srand(9);
     const unsigned int NR_TREES = 100;
     std::vector<glm::vec3> treePos;
@@ -551,7 +532,7 @@ int main() {
             tree.Draw(shader);
         }
 
-        // drvo?
+        // drvo
         shaderB.use();
         model= glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(6.0f, -1.3f, 9.0f));
@@ -575,7 +556,7 @@ int main() {
         shaderLightBox.setMat4("view", view);
         model=glm::mat4(1.0f);
         model=glm::translate(model,  glm::vec3( 1.2f,  1.2f,  1.2f));
-        model=glm::scale(model, glm::vec3(0.1));
+        model=glm::scale(model, glm::vec3(0.06));
         shaderLightBox.setMat4("model", model);
         shaderLightBox.setVec3("lightColor", glm::vec3(14, 2, 25));
         renderCube();
@@ -596,7 +577,7 @@ int main() {
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
 
-        // 2. We blur bright fragments with two-pass Gaussian Blur
+        // bright fragments with two-pass Gaussian Blur
       
         glActiveTexture(GL_TEXTURE0);
         bool horizontal = true, first_iteration = true;
