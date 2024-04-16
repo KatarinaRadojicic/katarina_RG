@@ -25,7 +25,7 @@ Koriscen je skelet projekta i materijali sa [learnopengl] (https://learnopengl.c
 ##Sadrzaj
 U projektu su implemtirane obavezne oblasti (Blending - discard, Face culling, Advanced lighting).<br>
 <br>
-Opcione lekcije:
+## Opcione lekcije: <br>
 <br>
 <br>
 # Modeli<br>
@@ -35,10 +35,10 @@ Korisceni sajtovi:
 2.  https://free3d.com/
 
    <br>
-# Iz grupe `A`:
+# Iz grupe `A`:  <br>
 - Instancing 
 - Skybox <br>
-# Iz grupe `B`: 
+# Iz grupe `B`:  <br>
 - HDR i bloom
 
 ## Opis
