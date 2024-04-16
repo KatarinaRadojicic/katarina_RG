@@ -27,16 +27,18 @@ U projektu su implemtirane obavezne oblasti (Blending - discard, Face culling, A
 <br>
 Opcione lekcije:
 <br>
-Modeli<br>
+<br>
+# Modeli<br>
+
 Korisceni sajtovi:
 1.  https://3dexport.com/free-3d-models
 2.  https://free3d.com/
-3.  https://3dexport.com/free-3dmodel-bird-base-263433.htm
+
    <br>
-Iz grupe `A`:
+# Iz grupe `A`:
 - Instancing 
 - Skybox <br>
-Iz grupe `B`: 
+# Iz grupe `B`: 
 - HDR i bloom
 
 ## Opis
